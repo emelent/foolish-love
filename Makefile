@@ -1,7 +1,7 @@
 love_exe=/Applications/love.app/Contents/MacOS/love
 build:
 	mkdir -p dist
-	zip -9 -r dist/game.love . -x "Makefile" "dist*" ".*" "serve.py"
+	zip -9 -r dist/game.love . -x "Makefile" "dist*" ".*" "serve.py" "netlify.toml"
 
 
 build-web: build
