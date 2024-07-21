@@ -45,6 +45,8 @@ jobs:
           echo "/*" > dist/web/_headers
           echo "  Cross-Origin-Opener-Policy: same-origin" >> dist/web/_headers
           echo "  Cross-Origin-Embedder-Policy: require-corp" >> dist/web/_headers
+          ls dist/web/
+          cat dist/web/_headers
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5.0.0
