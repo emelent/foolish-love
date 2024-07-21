@@ -38,6 +38,13 @@ jobs:
         uses: actions/setup-node@v4.0.3
       - name: Generate web dist
         run: npx love.js -t "Game" dist/game.love dist/web
+        
+      # Create _headers file
+      - name: Create _headers file
+        run: |
+          echo "/*" > dist/web/_headers
+          echo "  Cross-Origin-Opener-Policy: same-origin" >> dist/web/_headers
+          echo "  Cross-Origin-Embedder-Policy: require-corp" >> dist/web/_headers
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5.0.0
