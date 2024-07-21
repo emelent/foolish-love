@@ -1,0 +1,24 @@
+{
+    "runtime": {
+        "version": "LuaJIT",
+        "path": [
+            "lua/?.lua",
+            "lua/?/init.lua"
+        ]
+    },
+    "diagnostics": {
+        "globals": [
+            "vim",
+            "love"
+        ],
+        "disable": [
+            "unused-local"
+        ]
+    },
+    "workspace": {
+        "library": [
+            "path/to/your/lua/library"
+        ],
+        "checkThirdParty": false
+    }
+}
