@@ -39,24 +39,15 @@ jobs:
       - name: Generate web dist
         run: npx love.js -t "Game" dist/game.love dist/web
         
-      # Create _headers file
-      - name: Create _headers file
-        run: |
-          echo "/*" > dist/web/_headers
-          echo "  Cross-Origin-Opener-Policy: same-origin" >> dist/web/_headers
-          echo "  Cross-Origin-Embedder-Policy: require-corp" >> dist/web/_headers
-          ls dist/web/
-          cat dist/web/_headers
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5.0.0
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+      # Setup netlify toml
+      - name: Copy netlify toml
+        run: cp netlify.toml dist/web
+        
+      - name: Publish generated Blazor webassembly to Netlify  
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          # Artifact name
-          # Path of the directory containing the static assets.
-          path: dist/web
-
-      - name: Deploy GitHub Pages site
-        uses: actions/deploy-pages@v4.0.5
+          args: deploy --dir=dist/web --prod
+          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
