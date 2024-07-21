@@ -22,7 +22,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
+        
+        - name: 'gcr.io/cloud-builders/git'
+          secretEnv: ['SSH_KEY']
+          entrypoint: 'bash'
+          args:
+            - -c
+            - |
+              ls -lah
+              whereis zip
+              which zip
       # Runs a single command using the runners shell
       - name: Create love file
         run:  zip -9 -r dist/game.love . -x "Makefile" "dist*" ".*" "serve.py"
