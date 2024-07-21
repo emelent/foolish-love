@@ -23,11 +23,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Run a multi-line script
-        run: |
-          ls -lah
-          whereis zip
-          which zip
+      - name: Create dist dir
+        run: mkdir dist
 
       # Runs a single command using the runners shell
       - name: Create love file

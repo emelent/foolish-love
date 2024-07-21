@@ -1,5 +1,6 @@
 love_exe=/Applications/love.app/Contents/MacOS/love
 build:
+	mkdir -p dist
 	zip -9 -r dist/game.love . -x "Makefile" "dist*" ".*" "serve.py"
 
 
@@ -9,9 +10,6 @@ build-web: build
 
 clean:
 	rm -rf dist/*
-
-run-dist:
-	${love_exe} dist/game.love
 
 run:
 	${love_exe} .
