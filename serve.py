@@ -16,7 +16,7 @@ class COOPCOEPHandler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     handler = partial(COOPCOEPHandler, directory="dist/web")
-    server_address = ("", 8000)  # Serve on all addresses, port 8000
+    server_address = ("0.0.0.0", 8000)  # Serve on all addresses, port 8000
     httpd = HTTPServer(server_address, handler)
     print("Server running on port 8000")
     httpd.serve_forever()

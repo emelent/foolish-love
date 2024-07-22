@@ -14,7 +14,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -37,13 +37,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4.0.3
       - name: Generate web dist
-        run: npx love.js -t "Game" dist/game.love dist/web
-        
+        run: npx love.js -t "Game" dist/game.love dist/web -c
+
       # Setup netlify toml
       - name: Copy netlify toml
         run: cp netlify.toml dist/web
-        
-      - name: Publish to Netlify  
+
+      - name: Publish to Netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY__AUTH_TOKEN }}
