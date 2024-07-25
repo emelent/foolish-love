@@ -1,61 +1,72 @@
-local init_x
-local x
-local y
-local time = 0
-local speed = 300
-local max_w
+local screen
+local obstacle = {
+	x = 200,
+	y = 200,
+	w = 100,
+	h = 200,
+}
+local point = {
+	x = 200,
+	y = 300,
+}
+local lightShader
+local sheepImage
+local bgImage
+
 function love.load()
-	myImage = love.graphics.newImage("robot.png")
-	-- myImage = love.graphics.newImage("rainbow.jpg")
+	sheepImage = love.graphics.newImage("sheep.png")
+	bgImage = love.graphics.newImage("background.png")
 
-	max_w = love.graphics.getWidth() - myImage:getWidth()
-	y = math.floor((love.graphics.getHeight() - myImage:getHeight()) / 2)
-	init_x = math.floor(max_w / 2)
-	x = init_x
-	myShader = love.graphics.newShader([[
+	lightShader = love.graphics.newShader("shaders/shadow.glsl")
+	screen = { x = love.graphics.getWidth(), y = love.graphics.getHeight() }
+	-- lightShader:send("screen", { screen.x, screen.y })
+	lightShader:send("point", { point.x, point.y })
+	lightShader:send("vertexCount", 4)
+	lightShader:send(
+		"vertices",
+		unpack({
+			{ obstacle.x, obstacle.y },
 
-        extern number screen_width;
-        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-            vec4 pixel = Texel(texture, texture_coords); // pixel color
-            /*if (screen_coords.x < 210) {
-                return pixel * color;
-            } 
-            if (screen_coords.x < 420) {
-                return pixel;
-            }
+			{ obstacle.x + obstacle.w, obstacle.y },
 
-            number avg = (pixel.r + pixel.g + pixel.b) / 3.0;
-            pixel.r = avg;
-            pixel.g = avg;
-            pixel.b = avg;*/
+			{ obstacle.x + obstacle.w, obstacle.y + obstacle.h },
 
-            number avg = (pixel.r + pixel.g + pixel.b) / 3.0;
-            number factor = screen_coords.x /screen_width;
-            pixel.r = pixel.r + (avg - pixel.r) * factor;
-            pixel.g = pixel.g + (avg - pixel.g) * factor;
-            pixel.b = pixel.b + (avg - pixel.b) * factor;
-            return pixel;
-        }
-    ]])
-	myShader:send("screen_width", love.graphics.getWidth())
+			{ obstacle.x, obstacle.y + obstacle.h },
+		})
+	)
 end
 
 function love.draw()
+	love.graphics.setBackgroundColor(1, 1, 1)
+	love.graphics.setShader(lightShader)
+	love.graphics.draw(bgImage)
+
 	love.graphics.setColor(1, 0, 0)
-	love.graphics.setShader(myShader)
-	love.graphics.draw(myImage, x, y)
 
-	-- love.graphics.rectangle("fill", 300, 100, 100, 100)
+	love.graphics.rectangle("fill", obstacle.x, obstacle.y, obstacle.w, obstacle.h)
+
+	love.graphics.draw(sheepImage, 400, 300)
+
+	-- draw light dot
+	love.graphics.setColor(0.4, 0.9, 0.6, 1)
 	love.graphics.setShader()
-end
-
-local function move_by_time(dt)
-	time = time + dt * 2
-	x = init_x + math.sin(time) * init_x
+	love.graphics.circle("fill", point.x, point.y, 4)
+	love.graphics.setColor(1, 1, 1)
 end
 
 function love.update(dt)
-	move_by_time(dt)
+	if love.keyboard.isDown("left") then
+		point.x = point.x - 200 * dt
+	elseif love.keyboard.isDown("right") then
+		point.x = point.x + 200 * dt
+	end
+	if love.keyboard.isDown("up") then
+		point.y = point.y - 200 * dt
+	elseif love.keyboard.isDown("down") then
+		point.y = point.y + 200 * dt
+	end
+
+	lightShader:send("point", { point.x, point.y })
 end
 
 function love.keypressed(key)
